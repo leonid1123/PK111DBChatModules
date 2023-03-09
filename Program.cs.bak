@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 bool canLogin = false;
-int id = -1;
+int id=-1;
 string cs = @"server=localhost;userid=pk111;password=123456;database=pk111";
 MySqlConnection con = new MySqlConnection(cs);
 con.Open();
@@ -45,27 +45,24 @@ if (canLogin)
     onlineCmd.Prepare();
     onlineCmd.ExecuteNonQuery();
     con.Close();
-    while (true)
-    {
-        Console.WriteLine("Напишите сообщение");
-        string message = Console.ReadLine();
-        string msgSQL = "INSERT INTO `msg`(`text`, `user`) VALUES (@messageText,@userId)";
-        MySqlCommand sendMessage = new MySqlCommand(msgSQL, con);
-        sendMessage.Parameters.AddWithValue("messageText", message);
-        sendMessage.Parameters.AddWithValue("userId", id);
-        con.Open();
-        sendMessage.ExecuteNonQuery();
-        con.Close();
-        Console.WriteLine("------------------------------------------------");
-        string allMsg = "SELECT `users`.`nikname` as \"Nik\" ,`time`,`text` FROM `msg` JOIN `users` WHERE `msg`.`user` = `users`.`id` ORDER BY `time` ASC";
-        MySqlCommand getAllMsg = new MySqlCommand(allMsg, con);
-        con.Open();
-        MySqlDataReader allMessages = getAllMsg.ExecuteReader();
-        while (allMessages.Read())
-        {
-            Console.WriteLine("{0} - {1}:{2} ", allMessages.GetString(1), allMessages.GetString(0), allMessages.GetString(2));
-        }
-        allMessages.Close();
-        con.Close();
-    }
+
+    Console.WriteLine("Напишите сообщение");
+    string message = Console.ReadLine();
+    string msgSQL = "INSERT INTO `msg`(`text`, `user`) VALUES (@messageText,@userId)";
+    MySqlCommand sendMessage = new MySqlCommand(msgSQL, con);
+    sendMessage.Parameters.AddWithValue("messageText", message);
+    sendMessage.Parameters.AddWithValue("userId",id);
+    con.Open();
+    sendMessage.ExecuteNonQuery();
 }
+
+
+
+//сделать авторизацию по паре логин-пароль
+/*
+    пользователь пишет логин и пароль
+    у БД спрашиваем есть ли такой логин
+    если такой логин есть, то получаем из БД пароль
+    проверяем совпадение пароля
+    если пароль совпадает, то авторизуем пользователя.
+*/
